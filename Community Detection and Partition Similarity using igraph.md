@@ -41,12 +41,14 @@ edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
 G = ig.Graph(edges=edges, directed=False)
 ```
 ### 1.5 Load a Graph from a File (Edge List Format)
-
-`G = ig.Graph.Read_Edgelist("graph_edges.txt", directed=False)`
+```
+G = ig.Graph.Read_Edgelist("graph_edges.txt", directed=False)
+````
 
 ### 1.6 Load a Graph from a GraphML File
-
-`G = ig.Graph.Read_GraphML("network.graphml")`
+```
+G = ig.Graph.Read_GraphML("network.graphml")
+```
 
 ## Famous Graphs supported by igraph
 
