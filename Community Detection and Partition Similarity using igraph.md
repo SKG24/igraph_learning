@@ -27,7 +27,9 @@ G.vs["label"] = [str(i) for i in range(G.vcount())]  # Assign labels
 ```
 
 ### 1.2 Load the Karate Club Graph (Famous Graph)
-`G = ig.Graph.Famous("Zachary")`
+```
+G = ig.Graph.Famous("Zachary")
+```
 
 ### 1.3 Load a Graph from an Adjacency Matrix
 ```
