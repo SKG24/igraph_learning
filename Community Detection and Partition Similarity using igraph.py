@@ -1,19 +1,18 @@
 """
-
 This project demonstrates the implementation of various **community detection algorithms** using the **igraph** library in Python. It evaluates the similarity between detected communities using partition similarity measures. 
 
-### Why it matters?
-
+Why it matters?
 Partition similarity measures such as Normalized Mutual Information (NMI), Variation of Information (VI), and Rand Index (RI) play a crucial role in evaluating how well different community detection methods align with real-world structures. Their importance extends across various domains:
 
- Biology  ->  Helps compare clustering methods in gene expression analysis, protein-protein interaction networks, and brain connectivity studies to ensure detected communities align with biological functions. |
- Sociology	-> Validates social group detection in networks, such as identifying close-knit communities in online platforms or understanding demographic segmentation in social research.|
- Neuroscience	->Ensures consistency in brain region connectivity analysis, comparing different clustering techniques applied to fMRI and neural connectivity data.|
- Marketing ->	Assesses the accuracy of customer segmentation by evaluating how different clustering techniques group consumers based on behavior and preferences.|
+Biology  ->  Helps compare clustering methods in gene expression analysis, protein-protein interaction networks, and brain connectivity studies to ensure detected communities align with biological functions. |
+Sociology	-> Validates social group detection in networks, such as identifying close-knit communities in online platforms or understanding demographic segmentation in social research.|
+Neuroscience	->Ensures consistency in brain region connectivity analysis, comparing different clustering techniques applied to fMRI and neural connectivity data.|
+Marketing ->	Assesses the accuracy of customer segmentation by evaluating how different clustering techniques group consumers based on behavior and preferences.|
 Cybersecurity	-> Helps identify consistent threat actor groups in network traffic analysis by comparing clustering methods used for anomaly detection and fraud detection.|
 """
 # Installation
 pip install igraph numpy matplotlib
+
 """
 - igraph: A Python library for creating and analyzing graphs and network structures.
 
@@ -22,7 +21,6 @@ pip install igraph numpy matplotlib
 - matplotlib: A plotting library for creating static, animated, and interactive visualizations.
 """
 # 1. Follow any one method to load graph data
-
 # 1.1 Generate a Random Graph
 
 import igraph as ig
@@ -63,16 +61,11 @@ Florentine Families	-> A marriage and business network of Renaissance Florentine
 The following algorithms are applied:
 
 - Louvain Method (Modularity optimization):
-
   A hierarchical clustering algorithm that optimizes modularity to detect 
   communities efficiently in large networks. The Louvain method works by repeating two phases. In phase one, nodes are sorted into communities based on how the modularity of the graph changes when a node moves communities. In phase two, the graph is reinterpreted so that communities are seen as individual nodes.
-
-  The Louvain method is assumed to have a time complexity of $O(n\log(n))$
   
 - Edge Betweenness Method (Girvan-Newman):
-
   The Girvan–Newman algorithm detects communities by progressively removing edges from the original network. The connected components of the remaining network are the communities. Instead of trying to construct a measure that tells us which edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities.
-  
   The algorithm's steps for community detection are summarized below
   
   - The betweenness of all existing edges in the network is calculated first.
@@ -82,7 +75,6 @@ The following algorithms are applied:
 
 
 - Fast Greedy Method** (Agglomerative clustering):
-
   Uses hierarchical agglomerative clustering to merge nodes and optimize modularity. This is a "bottom-up" approach: Each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy.
 
 """
@@ -118,10 +110,10 @@ plot_graph(G, edge_betweenness_communities, "Edge Betweenness Community Detectio
 plot_graph(G, fast_greedy_communities, "Fast Greedy Community Detection")
 
 """
-# 5. Partition Similarity Measures
+5. Partition Similarity Measures
 To compare different community detection methods, we compute Normalized Mutual Information (NMI), Variation of Information (VI), and Rand Index (RI).
 
-### Defination of H(X), H(X|Y) and I(X,Y)
+Defination of H(X), H(X|Y) and I(X,Y)
 - Mutual information
   
   I(X, Y) = H(X) - H(X|Y)
@@ -183,6 +175,7 @@ print(f"VI (Louvain vs Fast Greedy): {vi_fg_louvain:.4f}")
 print(f"Rand Index (Louvain vs Edge Betweenness): {ri_eb_louvain:.4f}")
 print(f"Rand Index (Louvain vs Fast Greedy): {ri_fg_louvain:.4f}")
 
-
-# 7. Conclusion
-#This project systematically analyzes community detection algorithms and evaluates their performance using partition similarity metrics. 
+"""
+7. Conclusion
+This project systematically analyzes community detection algorithms and evaluates their performance using partition similarity metrics. 
+"""
