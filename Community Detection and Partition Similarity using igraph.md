@@ -13,7 +13,7 @@ Ensure you have the required dependencies installed:
 
 - matplotlib: A plotting library for creating static, animated, and interactive visualizations.
 
-# 1. Follow any lone method to load graph data
+# 1. Follow any one method to load graph data
 
 ### 1.1 Generate a Random Graph
 ```
