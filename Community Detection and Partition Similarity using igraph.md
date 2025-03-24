@@ -1,6 +1,6 @@
 # Overview
 
-This project demonstrates the implementation of various **community detection algorithms** using the **igraph** library in Python. It also evaluates the similarity between detected communities using partition similarity measures. The visual representation of communities is provided for better understanding.
+This project demonstrates the implementation of various **community detection algorithms** using the **igraph** library in Python. It evaluates the similarity between detected communities using partition similarity measures. 
 
 # Installation
 
@@ -13,7 +13,7 @@ Ensure you have the required dependencies installed:
 
 - matplotlib: A plotting library for creating static, animated, and interactive visualizations.
 
-# 1. Follow anyone method to load graph data
+# 1. Follow any lone method to load graph data
 
 ### 1.1 Generate a Random Graph
 ```
@@ -64,21 +64,26 @@ The following algorithms are applied:
 
 - **Louvain Method** (Modularity optimization):
 
-  A hierarchical clustering algorithm that optimizes modularity to detect communities efficiently in large networks.
-  
-  Use Case: Social network analysis, detecting communities in large-scale graphs.
+  A hierarchical clustering algorithm that optimizes modularity to detect 
+  communities efficiently in large networks. The Louvain method works by repeating two phases. In phase one, nodes are sorted into communities based on how the modularity of the graph changes when a node moves communities. In phase two, the graph is reinterpreted so that communities are seen as individual nodes.
 
+  The Louvain method is assumed to have a time complexity of $O(n\log(n))$
+  
 - **Edge Betweenness Method** (Girvan-Newman):
 
-  Iteratively removes edges with high betweenness to divide the network into communities.
+  The Girvan–Newman algorithm detects communities by progressively removing edges from the original network. The connected components of the remaining network are the communities. Instead of trying to construct a measure that tells us which edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities.
+  
+  The algorithm's steps for community detection are summarized below
+  
+  - The betweenness of all existing edges in the network is calculated first.
+  - The edge(s) with the highest betweenness are removed.
+  - The betweenness of all edges affected by the removal is recalculated.
+  - Steps 2 and 3 are repeated until no edges remain.
 
-  Use Case: Finding tightly connected groups in biological and citation networks.
 
 - **Fast Greedy Method** (Agglomerative clustering):
 
-  Uses hierarchical agglomerative clustering to merge nodes and optimize modularity.
-  
-  Use Case: Hierarchical clustering of organizations, identifying functional modules in brain networks.
+  Uses hierarchical agglomerative clustering to merge nodes and optimize modularity. This is a "bottom-up" approach: Each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy.
 
 ```
 # Louvain Method
