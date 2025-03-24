@@ -38,3 +38,13 @@ Hierarchical clustering builds a hierarchy of clusters using different linkage s
 - `G.community_fastgreedy()` → Implements agglomerative clustering based on modularity optimization.
 
 - `dendrogram.as_clustering(k)` → Converts dendrogram into k clusters.
+
+
+# References Used:
+https://igraph.org/c/html/latest/igraph-Community.html
+
+[1608.00163v2.pdf](https://github.com/user-attachments/files/19415758/160
+
+[0906.0612v2.pdf](https://github.com/user-attachments/files/19415761/0906.0612v2.pdf)
+8.00163v2.pdf)
+
