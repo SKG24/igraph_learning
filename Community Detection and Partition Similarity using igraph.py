@@ -1,103 +1,48 @@
 """
-This project demonstrates the implementation of various **community detection algorithms** using the **igraph** library in Python. It evaluates the similarity between detected communities using partition similarity measures. 
+.. _tutorials-evaluate-communities:
 
-Why it matters?
-Partition similarity measures such as Normalized Mutual Information (NMI), Variation of Information (VI), and Rand Index (RI) play a crucial role in evaluating how well different community detection methods align with real-world structures. Their importance extends across various domains:
+=============================
+Partition Similarity Measure
+=============================
 
-Biology  ->  Helps compare clustering methods in gene expression analysis, protein-protein interaction networks, and brain connectivity studies to ensure detected communities align with biological functions. |
-Sociology	-> Validates social group detection in networks, such as identifying close-knit communities in online platforms or understanding demographic segmentation in social research.|
-Neuroscience	->Ensures consistency in brain region connectivity analysis, comparing different clustering techniques applied to fMRI and neural connectivity data.|
-Marketing ->	Assesses the accuracy of customer segmentation by evaluating how different clustering techniques group consumers based on behavior and preferences.|
-Cybersecurity	-> Helps identify consistent threat actor groups in network traffic analysis by comparing clustering methods used for anomaly detection and fraud detection.|
+This example shows how to evaluates the similarity between detected communities using partition similarity measures. 
+
 """
+#%%
 # Installation
 pip install igraph numpy matplotlib
-
-"""
-- igraph: A Python library for creating and analyzing graphs and network structures.
-
-- numpy: A powerful numerical computing library for handling arrays and mathematical operations.
-
-- matplotlib: A plotting library for creating static, animated, and interactive visualizations.
-"""
-# 1. Follow any one method to load graph data
-# 1.1 Generate a Random Graph
 
 import igraph as ig
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Generate a Random Graph
-G = ig.Graph.Erdos_Renyi(n=30, m=50)  # 30 nodes, 50 edges
-G.vs["label"] = [str(i) for i in range(G.vcount())]  # Assign labels
-
-"""
-1.2 Load the Karate Club Graph (Famous Graph)
+# %%
+# First, we generate a graph. We use a famous graph here for simplicity:
 G = ig.Graph.Famous("Zachary")
 
-1.3 Load a Graph from an Adjacency Matrix
-adj_matrix = np.random.randint(0, 2, (10, 10))  # Random adjacency matrix
-G = ig.Graph.Adjacency((adj_matrix > 0).tolist())
-
-1.4 Load a Graph from an Edge List
-edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
-G = ig.Graph(edges=edges, directed=False)
-
-1.5 Load a Graph from a File (Edge List Format)
-G = ig.Graph.Read_Edgelist("graph_edges.txt", directed=False)
-
-1.6 Load a Graph from a GraphML File
-G = ig.Graph.Read_GraphML("network.graphml")
-
-Famous Graphs supported by igraph
-Zachary  ->  Social network of friendships between 34 members of a karate club. 
-Dolphins  -> Social network of bottlenose dolphins, based on frequent association. 
-Les Miserables	-> Co-occurrence network of characters in Les Misérables (based on book scenes). 
-Polbooks ->  Network of books about US politics sold on Amazon, where edges indicate frequent co-purchases. 
-LCF -> Graph	A class of circulant graphs defined by n, d, and k. 
-Florentine Families	-> A marriage and business network of Renaissance Florentine families.
-
-2. Apply Community Detection Methods
-The following algorithms are applied:
-
-- Louvain Method (Modularity optimization):
-  A hierarchical clustering algorithm that optimizes modularity to detect 
-  communities efficiently in large networks. The Louvain method works by repeating two phases. In phase one, nodes are sorted into communities based on how the modularity of the graph changes when a node moves communities. In phase two, the graph is reinterpreted so that communities are seen as individual nodes.
-  
-- Edge Betweenness Method (Girvan-Newman):
-  The Girvan–Newman algorithm detects communities by progressively removing edges from the original network. The connected components of the remaining network are the communities. Instead of trying to construct a measure that tells us which edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities.
-  The algorithm's steps for community detection are summarized below
-  
-  - The betweenness of all existing edges in the network is calculated first.
-  - The edge(s) with the highest betweenness are removed.
-  - The betweenness of all edges affected by the removal is recalculated.
-  - Steps 2 and 3 are repeated until no edges remain.
-
-
-- Fast Greedy Method** (Agglomerative clustering):
-  Uses hierarchical agglomerative clustering to merge nodes and optimize modularity. This is a "bottom-up" approach: Each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy.
-
-"""
-# Louvain Method
+# %%
+# Louvain method is a popular modularity-based approach for detecting communities in a network.
 louvain_communities = G.community_multilevel()
 
-# Edge Betweenness Method
+#%%
+# Edge betweenness is a standard way to detect communities. We then covert into
+# a :class:`igraph.VertexClustering` object for subsequent ease of use:
 edge_betweenness_communities = G.community_edge_betweenness().as_clustering()
 
-# Fast Greedy Method
+#%%
+# Fast greedy is a hierarchical agglomerative approach that merges nodes to optimize modularity and is converted into 
+# a :class:`igraph.VertexClustering` object.
 fast_greedy_communities = G.community_fastgreedy().as_clustering()
 
-# 3. Assign Colors for Clusters
-#A function is created to assign distinct colors to each community.
-
+# %%
+# Next, we color each vertex and edge based on its community membership:
 def get_cluster_colors(communities):
     num_clusters = len(set(communities.membership))
     colors = plt.cm.get_cmap("tab10", num_clusters)  # Use 'tab10' colormap
     return [colors(i)[:3] for i in communities.membership]
 
-# 4. Visualizing Detected Communities
-#Each graph is plotted with distinct community coloring.
-
+#%%
+# Plots the graph with nodes colored based on their community assignments for clear visualization.
 def plot_graph(graph, communities, title):
     node_colors = get_cluster_colors(communities)
     fig, ax = plt.subplots(figsize=(7, 5))
@@ -109,44 +54,13 @@ plot_graph(G, louvain_communities, "Louvain Community Detection")
 plot_graph(G, edge_betweenness_communities, "Edge Betweenness Community Detection")
 plot_graph(G, fast_greedy_communities, "Fast Greedy Community Detection")
 
-"""
-5. Partition Similarity Measures
-To compare different community detection methods, we compute Normalized Mutual Information (NMI), Variation of Information (VI), and Rand Index (RI).
-
-Defination of H(X), H(X|Y) and I(X,Y)
-- Mutual information
-  
-  I(X, Y) = H(X) - H(X|Y)
-
-- Shannon entropy of X
-  
-  H(X) = - \sum_{x} P(x) log P(x)
-
-- Conditional entropy of X given Y
-  
-  H(X|Y) = - \sum_{x,y} P(x,y) log P(x|y)
-
-Normalized Mutual Information (NMI)
-Measures the mutual dependence between two partitions, normalized to [0,1].
-I(X,Y) = 2I(X,Y) / H(X) + H(Y)
-
-Variation of Information (VI)
-Measures the distance between two partitions based on entropy.
-V(X,Y) = H(X|Y) + H(Y|X)
-
-Rand Index (RI)
-Evaluates the similarity between two partitions based on pairwise agreements.
-R(X,Y) = a11 + a00 / a11 + a00 + a01 + a10 
-
-- a11 indicate the number of pairs of vertices which are in the same community in both partitions.
-- a01 (a10) the number of pairs of elements which are in the same community in X (Y) and in different communities in Y (X).
-- a00 the number of pairs of vertices that are in different communities in both partitions. 
-"""
-
+#%%
+# Extracts community memberships as a list of cluster assignments for each node.
 def get_membership(communities):
     return communities.membership
-
-# Compute Similarity Measures
+  
+#%%
+# Computes similarity measures (NMI, VI, RI) to compare detected community structures across methods.
 louvain_membership = get_membership(louvain_communities)
 edge_betweenness_membership = get_membership(edge_betweenness_communities)
 fast_greedy_membership = get_membership(fast_greedy_communities)
@@ -163,9 +77,8 @@ vi_fg_louvain = ig.compare_communities(louvain_membership, fast_greedy_membershi
 ri_eb_louvain = ig.compare_communities(louvain_membership, edge_betweenness_membership, method="rand")
 ri_fg_louvain = ig.compare_communities(louvain_membership, fast_greedy_membership, method="rand")
 
-
-# 6. Results
-
+#%%
+# Last, we print the results
 print("\nPartition Similarity Measures:")
 print(f"NMI (Louvain vs Edge Betweenness): {nmi_eb_louvain:.4f}")
 print(f"NMI (Louvain vs Fast Greedy): {nmi_fg_louvain:.4f}")
@@ -175,7 +88,7 @@ print(f"VI (Louvain vs Fast Greedy): {vi_fg_louvain:.4f}")
 print(f"Rand Index (Louvain vs Edge Betweenness): {ri_eb_louvain:.4f}")
 print(f"Rand Index (Louvain vs Fast Greedy): {ri_fg_louvain:.4f}")
 
-"""
-7. Conclusion
+
+# %%
 This project systematically analyzes community detection algorithms and evaluates their performance using partition similarity metrics. 
-"""
+
