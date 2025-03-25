@@ -8,19 +8,15 @@ Partition Similarity Measure
 This example shows how to evaluates the similarity between detected communities using partition similarity measures. 
 
 """
-#%%
-# Installation
-pip install igraph numpy matplotlib
-
 import igraph as ig
 import numpy as np
 import matplotlib.pyplot as plt
 
-# %%
+#%%
 # First, we generate a graph. We use a famous graph here for simplicity:
 G = ig.Graph.Famous("Zachary")
 
-# %%
+#%%
 # Louvain method is a popular modularity-based approach for detecting communities in a network.
 louvain_communities = G.community_multilevel()
 
@@ -34,7 +30,7 @@ edge_betweenness_communities = G.community_edge_betweenness().as_clustering()
 # a :class:`igraph.VertexClustering` object.
 fast_greedy_communities = G.community_fastgreedy().as_clustering()
 
-# %%
+#%%
 # Next, we color each vertex and edge based on its community membership:
 def get_cluster_colors(communities):
     num_clusters = len(set(communities.membership))
@@ -89,6 +85,6 @@ print(f"Rand Index (Louvain vs Edge Betweenness): {ri_eb_louvain:.4f}")
 print(f"Rand Index (Louvain vs Fast Greedy): {ri_fg_louvain:.4f}")
 
 
-# %%
+#%%
 #This project systematically analyzes community detection algorithms and evaluates their performance using partition similarity metrics. 
 
