@@ -90,5 +90,5 @@ print(f"Rand Index (Louvain vs Fast Greedy): {ri_fg_louvain:.4f}")
 
 
 # %%
-This project systematically analyzes community detection algorithms and evaluates their performance using partition similarity metrics. 
+#This project systematically analyzes community detection algorithms and evaluates their performance using partition similarity metrics. 
 
