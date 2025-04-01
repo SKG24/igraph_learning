@@ -41,6 +41,42 @@ Hierarchical clustering builds a hierarchy of clusters using different linkage s
 
 ## Animation
 ```
+# Add Zachary's original factions manually
+    faction_mapping = {
+        0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 1, 9: 0,
+        10: 0, 11: 0, 12: 0, 13: 0, 14: 1, 15: 1, 16: 0, 17: 0, 18: 1, 19: 0,
+        20: 1, 21: 0, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1,
+        30: 1, 31: 1, 32: 1, 33: 1
+    }
+    graph.vs["Faction"] = [faction_mapping[i] for i in range(len(graph.vs))]
+    
+    # Configuration
+    cmap = ListedColormap(["#1f77b4", "#ff7f0e"])  # Two colors for factions
+    cluster_cmap = ListedColormap(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+                                 "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"])
+    
+    layout = graph.layout("fruchterman_reingold")
+    positions = np.array(layout.coords)
+
+    # Clustering algorithms
+    clustering_algorithms = {
+        "Fastgreedy": graph.community_fastgreedy().as_clustering(),
+        "Walktrap": graph.community_walktrap().as_clustering(),
+        "Louvain": graph.community_multilevel(),
+        "LabelProp": graph.community_label_propagation()
+    }
+    
+    # Precompute cluster metrics
+    cluster_data = {}
+    for name, clusters in clustering_algorithms.items():
+        cluster_data[name] = {
+            "clusters": clusters,
+            "modularity": graph.modularity(clusters.membership),
+            "num_clusters": len(clusters),
+            "ground_truth_accuracy": np.mean(np.array(clusters.membership) == np.array(graph.vs["Faction"]))
+        }
+```
+```
 # Phase: Algorithm visualization
         elif frame < discovery_duration + len(clustering_algorithms)*algorithm_duration:
             phase_frame = frame - discovery_duration
